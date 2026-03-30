@@ -7,14 +7,6 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-permissions:
-  id-token: write
-  contents: read
-
-env:
-  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-
 jobs:
   terraform-plan:
     name: Terraform Plan
@@ -25,12 +17,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    # Login to Azure via Azure CLI
+    # Login to Azure using Service Principal Secret
     - name: Login to Azure
-      uses: azure/login@v2
+      uses: azure/login@v3
       with:
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
     
     # Install the latest version of the Terraform CLI
     - name: Setup Terraform
@@ -68,12 +59,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    # Login to Azure via Azure CLI
+    # Login to Azure using Service Principal Secret
     - name: Login to Azure
-      uses: azure/login@v2
+      uses: azure/login@v3
       with:
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
     
     # Install the latest version of Terraform CLI
     - name: Setup Terraform
